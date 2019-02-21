@@ -14,6 +14,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <algorithm> 
 #include "map.h"
 
 // for portability of M_PI (Vis Studio, MinGW, etc.)
@@ -46,6 +47,8 @@ struct LandmarkObs {
   int id;     // Id of matching landmark in the map.
   double x;   // Local (vehicle coords) x position of landmark observation [m]
   double y;   // Local (vehicle coords) y position of landmark observation [m]
+
+ 
 };
 
 /**
@@ -84,7 +87,7 @@ inline double * getError(double gt_x, double gt_y, double gt_theta, double pf_x,
  */
 inline bool read_map_data(std::string filename, Map& map) {
   // Get file of map
-  std::ifstream in_file_map(filename.c_str(),std::ifstream::in);
+  std::ifstream in_file_map(filename.c_str(), std::ifstream::in);
   // Return if we can't open the file
   if (!in_file_map) {
     return false;
@@ -247,5 +250,25 @@ inline bool read_landmark_data(std::string filename,
   }
   return true;
 }
+
+
+template<typename T, typename Fn >
+double mean( const std::vector<T>& v, Fn f ) {
+    int n = v.size();
+    double _sum = 0.0; 
+    for( const auto& x : v) {
+      _sum += f(x);
+    }
+    return _sum / n;
+};
+
+template<typename T, typename Fn >
+double sum( const std::vector<T>& v, Fn f ) {    
+    double _sum = 0.0; 
+    for( const auto& x : v) {
+      _sum += f(x);
+    }
+    return _sum;
+};
 
 #endif  // HELPER_FUNCTIONS_H_
